@@ -8,6 +8,12 @@
     fwrite($file, $email ."\n");
     fwrite($file,"Password :");
     fwrite($file, $password ."\n");
+    fwrite($file,"Surname :");
+    fwrite($file, $Surname ."\n");
+    fwrite($file,"PhoneNumber :");
+    fwrite($file, $PhoneNumber ."\n");
+    fwrite($file,"PostCode :");
+    fwrite($file, $PostCode ."\n");
     fclose($file);
     header("location: index.php");
  ?>
