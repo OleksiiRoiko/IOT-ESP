@@ -94,6 +94,18 @@
         <input type="password" name="password"  autocomplete="off" required>
         <label for="">Password</label>
       </div>
+      <div class="input-box">
+        <input type="text" name="Surname"  autocomplete="off" required>
+        <label for="">Surname</label>
+      </div>
+      <div class="input-box">
+        <input type="text" name="PhoneNumber"  autocomplete="off" required>
+        <label for="">PhoneNumber</label>
+      </div>
+      <div class="input-box">
+        <input type="text" name="PostCode"  autocomplete="off" required>
+        <label for="">PostCode</label>
+      </div>
         <input type="submit" value="Save">
     </form>
   </div>
