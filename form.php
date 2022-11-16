@@ -1,114 +1,105 @@
-<?php
-ob_start();
-session_start();
-require_once 'dbconnect.php';
 
-// if session is set direct to index
-if (isset($_SESSION['user'])) {
-    header("Location: index.php");
-    exit;
+<!DOCTYPE HTML>  
+<html>
+<head>
+<style>
+.error {color: #FF0000;}
+</style>
+</head>
+<body>  
+
+<?php
+// define variables and set to empty values
+$nameErr = $emailErr = $genderErr = $websiteErr = "";
+$name = $email = $gender = $comment = $website = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (empty($_POST["name"])) {
+    $nameErr = "Name is required";
+  } else {
+    $name = test_input($_POST["name"]);
+    // check if name only contains letters and whitespace
+    if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
+      $nameErr = "Only letters and white space allowed";
+    }
+  }
+  
+  if (empty($_POST["email"])) {
+    $emailErr = "Email is required";
+  } else {
+    $email = test_input($_POST["email"]);
+    // check if e-mail address is well-formed
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $emailErr = "Invalid email format";
+    }
+  }
+    
+  if (empty($_POST["website"])) {
+    $website = "";
+  } else {
+    $website = test_input($_POST["website"]);
+    // check if URL address syntax is valid (this regular expression also allows dashes in the URL)
+    if (!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$website)) {
+      $websiteErr = "Invalid URL";
+    }
+  }
+
+  if (empty($_POST["comment"])) {
+    $comment = "";
+  } else {
+    $comment = test_input($_POST["comment"]);
+  }
+
+  if (empty($_POST["gender"])) {
+    $genderErr = "Gender is required";
+  } else {
+    $gender = test_input($_POST["gender"]);
+  }
 }
 
-if (isset($_POST['btn-login'])) {
-    $email = $_POST['email'];
-    $upass = $_POST['pass'];
-
-    $password = hash('sha256', $upass); // password hashing using SHA256
-    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email= ?");
-    $stmt->bind_param("s", $email);
-    /* execute query */
-    $stmt->execute();
-    //get result
-    $res = $stmt->get_result();
-    $stmt->close();
-
-    $row = mysqli_fetch_array($res, MYSQLI_ASSOC);
-
-    $count = $res->num_rows;
-    if ($count == 1 && $row['password'] == $password) {
-        $_SESSION['user'] = $row['id'];
-        header("Location: index.php");
-    } elseif ($count == 1) {
-        $errMSG = "Bad password";
-    } else $errMSG = "User not found";
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
 }
 ?>
 
-<!DOCTYPE html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Login</title>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
-</head>
-<body>
+<h2>PHP Form Validation Example</h2>
+<p><span class="error">* required field</span></p>
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
+  Name: <input type="text" name="name" value="<?php echo $name;?>">
+  <span class="error">* <?php echo $nameErr;?></span>
+  <br><br>
+  E-mail: <input type="text" name="email" value="<?php echo $email;?>">
+  <span class="error">* <?php echo $emailErr;?></span>
+  <br><br>
+  Website: <input type="text" name="website" value="<?php echo $website;?>">
+  <span class="error"><?php echo $websiteErr;?></span>
+  <br><br>
+  Comment: <textarea name="comment" rows="5" cols="40"><?php echo $comment;?></textarea>
+  <br><br>
+  Gender:
+  <input type="radio" name="gender" <?php if (isset($gender) && $gender=="female") echo "checked";?> value="female">Female
+  <input type="radio" name="gender" <?php if (isset($gender) && $gender=="male") echo "checked";?> value="male">Male
+  <input type="radio" name="gender" <?php if (isset($gender) && $gender=="other") echo "checked";?> value="other">Other  
+  <span class="error">* <?php echo $genderErr;?></span>
+  <br><br>
+  <input type="submit" name="submit" value="Submit">  
+</form>
 
-<div class="container">
+<?php
+echo "<h2>Your Input:</h2>";
+echo $name;
+echo "<br>";
+echo $email;
+echo "<br>";
+echo $website;
+echo "<br>";
+echo $comment;
+echo "<br>";
+echo $gender;
+?>
 
-    <div id="login-form">
-        <form method="post" autocomplete="off">
-
-            <div class="col-md-12">
-
-                <div class="form-group">
-                    <h2 class="">Login:</h2>
-                </div>
-
-                <div class="form-group">
-                    <hr/>
-                </div>
-
-                <?php
-                if (isset($errMSG)) {
-
-                    ?>
-                    <div class="form-group">
-                        <div class="alert alert-danger">
-                            <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
-                        </div>
-                    </div>
-                    <?php
-                }
-                ?>
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                        <input type="email" name="email" class="form-control" placeholder="Email" required/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                        <input type="password" name="pass" class="form-control" placeholder="Password" required/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <hr/>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-block btn-primary" name="btn-login">Login</button>
-                </div>
-
-                <div class="form-group">
-                    <hr/>
-                </div>
-
-                <div class="form-group">
-                    <a href="register.php" type="button" class="btn btn-block btn-danger"
-                       name="btn-login">Register</a>
-                </div>
-
-            </div>
-
-        </form>
-    </div>
-
-</div>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>
