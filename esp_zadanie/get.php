@@ -7,6 +7,7 @@
     if ($values != null)
         fwrite($file, "read" ."\n");
 
+
     fclose($file);
     header("location: index.php");
  ?>
