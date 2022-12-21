@@ -4,6 +4,9 @@
 
     fwrite($file, $input1 ."\n");
 
+    if ($values != null)
+        fwrite($file, "read" ."\n");
+
     fclose($file);
     header("location: index.php");
  ?>
