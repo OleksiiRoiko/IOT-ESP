@@ -2,10 +2,10 @@
     extract($_REQUEST);
     $file=fopen("form-save.txt","w");
 
-    fwrite($file, $input1);
+    echo fwrite($file, $input1);
 
     if ($values != null)
-        fwrite($file, "read" ."\n");
+        echo fwrite($file, "read" ."\n");
 
     fclose($file);
     header("location: index.php");
