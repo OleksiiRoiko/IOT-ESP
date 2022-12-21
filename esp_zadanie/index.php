@@ -4,5 +4,5 @@
 </form><br>
 
 <form action="get.php">
-  <input type="submit" value="Submit">
+  <input type="submit" value="Submit" name = "values">
 </form><br>
