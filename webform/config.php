@@ -1,6 +1,6 @@
 <?php
     extract($_REQUEST);
-    $file=fopen("form-save.txt","a");
+    $file=fopen("form-save.txt","w");
 
     fwrite($file,"name :");
     fwrite($file, $username ."\n");
