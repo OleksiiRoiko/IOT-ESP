@@ -8,6 +8,6 @@
 </form><br>
 
 <?php
-$str = htmlentities(file_get_contents("Values.txt"));
+$str = array(htmlentities(file_get_contents("Values.txt")));
 echo $str;
 ?>
