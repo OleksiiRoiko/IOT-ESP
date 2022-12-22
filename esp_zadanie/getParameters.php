@@ -1,6 +1,7 @@
 <?php
-  $time = 0;
-  $angle = 0;
+  
+  $time = $_GET['time'];
+  $angle = $_GET['angle'];
   $file = fopen("Values.txt","w");
 
   fwrite($file,$time . "\n");
