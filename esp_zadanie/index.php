@@ -8,6 +8,11 @@
 </form><br>
 
 <?php
-$str = array(htmlentities(file_get_contents("Values.txt")));
-echo $str;
+$str = htmlentities(file_get_contents("Values.txt"));
+$time = array();
+for ($i = 0; $i < 8; $i++)
+    {
+      $time[i] = $str[i];  
+    }
+echo $time;
 ?>
