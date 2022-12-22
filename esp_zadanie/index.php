@@ -6,3 +6,8 @@
 <form action="get.php">
   <input type="submit" value="Submit" name = "values">
 </form><br>
+
+<?php
+$str = htmlentities(file_get_contents("Values.txt"));
+echo $str;
+?>
