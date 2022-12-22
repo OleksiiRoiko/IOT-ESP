@@ -9,5 +9,5 @@
 
 <?php
 $str = htmlentities(file_get_contents("Values.txt"));
-echo $time;
+echo $str;
 ?>
